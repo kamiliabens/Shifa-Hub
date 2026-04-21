@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | Shifa Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #fcf9f5; 
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --pink-main: #ff8fa3;
+            --stat-border: #ffe4e9;
+            --modal-bg: #ffffff;
+            --input-bg: #fdfafb;
+            --shine-color: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --stat-border: rgba(255, 255, 255, 0.1);
+            --modal-bg: #1e293b;
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --shine-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .premium-card {
+            background: var(--card-bg);
+            border: 2px solid var(--stat-border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, var(--shine-color), transparent);
+            transform: skewX(-25deg);
+            transition: 0.8s;
+        }
+
+        .premium-card:hover::before { left: 150%; }
+        .premium-card:hover { border-color: var(--pink-main); transform: translateY(-3px); }
+
+        .profile-img-container { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .profile-img-container:hover { transform: scale(1.1); }
+
+        .hover-pink:hover { color: var(--pink-main) !important; cursor: pointer; }
+
+        .activity-box {
+            background: rgba(255, 143, 163, 0.05);
+            border-radius: 15px;
+            padding: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .activity-box:hover { background: rgba(255, 143, 163, 0.12); border-color: var(--pink-main); transform: translateX(5px); }
+
+        #editModal {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            width: 90%; max-width: 440px; background: var(--modal-bg); 
+            border-radius: 30px; padding: 30px; border: 2px solid var(--pink-main);
+        }
+
+        .input-label { display: block; font-size: 11px; font-weight: 800; color: var(--pink-main); margin: 10px 0 5px 5px; }
+        .delete-btn { color: #ff6b6b; cursor: pointer; transition: 0.3s; font-size: 0.85rem; font-weight: 700; }
+        .delete-btn:hover { color: #ff4757; transform: scale(1.05); }
+
+        .medicine-icon-badge {
+            width: 45px; height: 45px; background: var(--pink-main);
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; color: #1a1a2e; font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="py-10 px-4">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+        <header class="premium-card rounded-[40px] p-8 flex flex-col md:flex-row items-center gap-10">
+            <div class="profile-img-container">
+                <img id="display-profile-img" src="profil-hub.jpg" class="w-32 h-32 md:w-40 md:h-40 rounded-[35px] object-cover border-4 border-pink-200 shadow-lg">
+            </div>
+            
+            <div class="flex-1 text-center md:text-left">
+                <h1 id="display-name" class="text-3xl font-extrabold hover-pink">Benabdeslam Kamilia</h1>
+                <div class="flex flex-wrap justify-center md:justify-start gap-8 mt-6">
+                    <div class="text-center group">
+                        <p class="text-2xl font-extrabold hover-pink">12</p>
+                        <p class="text-[10px] uppercase text-gray-400 font-bold">Donations</p>
+                    </div>
+                    <div class="text-center border-l border-pink-100/20 pl-8 group">
+                        <p class="text-2xl font-extrabold hover-pink">5</p>
+                        <p class="text-[10px] uppercase text-gray-400 font-bold">Requests</p>
+                    </div>
+                    <div class="text-center border-l border-pink-100/20 pl-8 group">
+                        <p class="text-2xl font-extrabold hover-pink">4.8</p>
+                        <div class="flex text-[#ff8fa3] text-[10px] justify-center"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button id="openEditModal" class="bg-[#ff8fa3] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#ff4d73] transition-all shadow-md">Edit Profile</button>
+                <a href="home.html" class="text-center text-xs font-bold opacity-60 hover:opacity-100 transition-opacity"><i class="fas fa-arrow-left mr-1"></i> Back to Home</a>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <aside class="space-y-8">
+                <div class="premium-card rounded-[35px] p-8">
+                    <h3 class="font-bold mb-8 flex items-center gap-3"><i class="fas fa-id-card text-[#ff8fa3]"></i> Contact Info</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 group"><i class="fas fa-envelope text-[#ff8fa3]"></i><p id="display-email" class="text-xs font-semibold hover-pink">k.benabdeslam.inf@lagh-univ.dz</p></div>
+                        <div class="flex items-center gap-4 group"><i class="fas fa-phone text-[#ff8fa3]"></i><p id="display-phone" class="text-xs font-semibold hover-pink">+213 656 77 24 00</p></div>
+                        <div class="flex items-center gap-4 group"><i class="fas fa-map-marker-alt text-[#ff8fa3]"></i><p id="display-location" class="text-xs font-semibold hover-pink">Tizi Ouzou, Algeria</p></div>
+                    </div>
+                </div>
+
+                <div class="premium-card rounded-[35px] p-8">
+                    <h3 class="font-bold mb-8 flex items-center gap-3"><i class="fas fa-history text-[#ff8fa3]"></i> Recent Activity</h3>
+                    <div class="space-y-4">
+                        <div class="activity-box flex items-center gap-4"><i class="fas fa-heart text-red-400"></i><div><p class="text-xs font-bold">Donated Panadol 1g</p><p class="text-[9px] text-gray-400">2 days ago</p></div></div>
+                        <div class="activity-box flex items-center gap-4"><i class="fas fa-comment text-blue-400"></i><div><p class="text-xs font-bold">New request received</p><p class="text-[9px] text-gray-400">5 hours ago</p></div></div>
+                        <div class="activity-box flex items-center gap-4"><i class="fas fa-check-circle text-green-400"></i><div><p class="text-xs font-bold">Profile updated</p><p class="text-[9px] text-gray-400">Just now</p></div></div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="lg:col-span-2">
+                <div class="premium-card rounded-[40px] p-10">
+                    <h3 class="text-2xl font-bold mb-10">Active Listings</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        
+                        <div class="medicine-card premium-card p-6 rounded-[30px] flex flex-col items-center">
+                            <div class="medicine-icon-badge"><i class="fas fa-pills"></i></div>
+                            <div class="bg-white rounded-2xl p-4 mb-4"><img src="paracetamol-hub.jpg" class="h-24 object-contain"></div>
+                            <h4 class="font-bold">Paracetamol 1g</h4>
+                            <p class="text-[10px] text-green-500 font-bold mb-4">Expiry: 12/2027</p>
+                            <button class="delete-btn"><i class="fas fa-trash-alt mr-2"></i>Remove</button>
+                        </div>
+
+                        <div class="medicine-card premium-card p-6 rounded-[30px] flex flex-col items-center">
+                            <div class="medicine-icon-badge"><i class="fas fa-stethoscope"></i></div>
+                            <div class="bg-white rounded-2xl p-4 mb-4"><img src="appariel-hub.jpg" class="h-24 object-contain"></div>
+                            <h4 class="font-bold">Glucose Meter</h4>
+                            <p class="text-[10px] text-green-500 font-bold mb-4">Perfect State</p>
+                            <button class="delete-btn"><i class="fas fa-trash-alt mr-2"></i>Remove</button>
+                        </div>
+
+                        <div class="medicine-card premium-card p-6 rounded-[30px] flex flex-col items-center">
+                            <div class="medicine-icon-badge"><i class="fas fa-capsules"></i></div>
+                            <div class="bg-white rounded-2xl p-4 mb-4"><img src="feroglobin-hub.jpg" class="h-24 object-contain"></div>
+                            <h4 class="font-bold">Feroglobin Capsules</h4>
+                            <p class="text-[10px] text-green-500 font-bold mb-4">Expiry: 08/2027</p>
+                            <button class="delete-btn"><i class="fas fa-trash-alt mr-2"></i>Remove</button>
+                        </div>
+                        
+                        <a href="add-medicine.html" class="premium-card border-2 border-dashed border-pink-200 rounded-[30px] flex flex-col items-center justify-center p-8 hover:bg-pink-50/10">
+                            <i class="fas fa-plus text-pink-300 text-3xl mb-2"></i>
+                            <span class="text-xs font-bold text-pink-300">ADD NEW ITEM</span>
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="editModal">
+        <div class="modal-content">
+            <h2 class="text-xl font-black text-center mb-6">Edit Profile</h2>
+            <form id="edit-form">
+                <div class="flex flex-col items-center mb-4">
+                    <label style="cursor: default;"><img id="preview-img" src="profil-hub.jpg" class="w-20 h-20 rounded-2xl object-cover border-2 border-pink-400 shadow-md transition-transform hover:scale-105"></label>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="input-label">First Name</label><input type="text" id="edit-first" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border-none outline-none text-xs text-[var(--text-main)]"></div>
+                    <div><label class="input-label">Last Name</label><input type="text" id="edit-last" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border-none outline-none text-xs text-[var(--text-main)]"></div>
+                </div>
+                <label class="input-label">Email</label>
+                <input type="email" id="edit-email" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border-none outline-none text-xs text-[var(--text-main)]">
+                <label class="input-label">Phone</label>
+                <input type="text" id="edit-phone" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border-none outline-none text-xs text-[var(--text-main)]">
+                <label class="input-label">Location</label>
+                <input type="text" id="edit-loc" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border-none outline-none text-xs text-[var(--text-main)]">
+                
+                <div class="flex gap-3 mt-8">
+                    <button type="button" id="savePlaceholder" class="flex-1 py-3 rounded-xl bg-[#ff8fa3] text-white font-bold text-sm hover:bg-[#ff4d73] transition-colors">Save Changes</button>
+                    <button type="button" id="cancelBtn" class="flex-1 py-3 rounded-xl bg-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-200 transition-colors">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="profil.js"></script>
+</body>
+</html>

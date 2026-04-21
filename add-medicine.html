@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item | Shifa Hub Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+    
+    <style>
+        :root {
+            --bg-color: #fcf9f5; 
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --pink-main: #ff8fa3;
+            --stat-border: #ffe4e9;
+            --input-bg: #fdfafb;
+            --shine-color: rgba(255, 255, 255, 0.8);
+            --pink-glow: 0 20px 50px rgba(255, 143, 163, 0.2);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --card-bg: #1e293b;
+            --text-main: #ffffff;
+            --stat-border: rgba(255, 255, 255, 0.25);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --shine-color: rgba(255, 255, 255, 0.15);
+            --pink-glow: 0 0 60px rgba(255, 143, 163, 0.35);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.4s ease;
+            padding: 20px 0;
+        }
+
+        .premium-form-card {
+            border: 2.5px solid var(--stat-border);
+            position: relative;
+            overflow: hidden;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--pink-glow);
+            transition: all 0.5s ease;
+        }
+
+        .premium-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, var(--shine-color), transparent);
+            transform: skewX(-25deg);
+            transition: 0.8s;
+            pointer-events: none;
+        }
+        .premium-form-card:hover::before { left: 150%; }
+
+        .title-premium {
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .title-premium:hover {
+            color: var(--pink-main);
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(255, 143, 163, 0.4);
+        }
+
+        .top-actions {
+            position: absolute; top: 25px; right: 25px;
+            display: flex; gap: 12px; z-index: 10;
+        }
+
+        .action-circle {
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+            background: rgba(255, 143, 163, 0.15);
+            color: var(--pink-main);
+            border: 1px solid var(--stat-border);
+        }
+        .action-circle:hover { transform: scale(1.1); background: var(--pink-main); color: white; }
+
+        .input-group label {
+            display: block; font-size: 11px; font-weight: 800;
+            color: var(--pink-main); margin: 18px 0 8px 5px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .styled-input {
+            width: 100%; padding: 15px; border-radius: 15px;
+            background: var(--input-bg); 
+            border: 2px solid var(--stat-border);
+            color: var(--text-main); font-size: 13px; outline: none;
+            transition: 0.3s;
+        }
+        .styled-input:focus { border-color: var(--pink-main); }
+
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+            color: var(--pink-main); pointer-events: none;
+        }
+
+        .upload-dashed {
+            border: 2px dashed var(--pink-main);
+            border-radius: 20px;
+            padding: 25px; text-align: center;
+            background: var(--input-bg);
+            transition: 0.3s;
+        }
+
+        .notes-trigger {
+            display: flex; align-items: center; gap: 8px; margin-top: 10px;
+            color: #94a3b8; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .notes-trigger:hover { color: var(--pink-main); }
+
+        .btn-post {
+            width: 100%; margin-top: 30px; padding: 18px;
+            background: var(--pink-main); color: white;
+            border-radius: 20px; font-weight: 800; font-size: 14px;
+            transition: 0.4s; box-shadow: 0 10px 25px rgba(255, 143, 163, 0.3);
+            text-transform: uppercase;
+        }
+        .btn-post:active { transform: scale(0.95); }
+
+        #success-msg {
+            display: none; color: #4ade80; font-size: 12px; font-weight: 700;
+            text-align: center; margin-top: 15px; animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="premium-form-card w-full max-w-2xl rounded-[45px] p-10 m-4">
+        
+        <div class="top-actions">
+            <a href="home.html" class="action-circle" title="Back to Home">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+
+        <h2 class="text-3xl font-black mb-1 title-premium">Add New Listing</h2>
+        <p class="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8">MAKE A DIFFERENCE IN SOMEONE'S LIFE</p>
+
+        <form id="listing-form" onsubmit="return false;">
+            <div class="input-group">
+                <label>Item Name</label>
+                <input type="text" placeholder="e.g. Wheelchair or Panadol" class="styled-input">
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <div class="input-group">
+                    <label>Category</label>
+                    <div class="select-wrapper">
+                        <select id="categorySelect" class="styled-input appearance-none">
+                            <option value="medicine">Medicine</option>
+                            <option value="equipment">Medical Equipment</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Quantity</label>
+                    <input type="number" placeholder="01" class="styled-input">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label id="conditionLabel">Condition / Expiry</label>
+                <input type="text" id="conditionInput" placeholder="e.g. Expiry Date: 12/2026" class="styled-input">
+            </div>
+
+            <div class="input-group">
+                <label>Item Photo</label>
+                <div class="upload-dashed block">
+                    <i class="fas fa-camera text-pink-300 text-3xl mb-2"></i>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase">UI Preview Only</p>
+                </div>
+                
+                <div class="notes-trigger" id="addNotesBtn">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Add extra notes...</span>
+                </div>
+                <textarea id="notesArea" class="styled-input mt-3 hidden h-20 resize-none" placeholder="Any special instructions?"></textarea>
+            </div>
+
+            <button type="button" id="fakeSubmit" class="btn-post">Post Listing</button>
+            <p id="success-msg"><i class="fas fa-check-circle mr-2"></i> Action simulated successfully (Frontend Only)</p>
+        </form>
+    </div>
+
+    <script src="add-medicine.js"></script>
+</body>
+</html>
