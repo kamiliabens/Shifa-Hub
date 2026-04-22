@@ -1,75 +1,146 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shifa Hub - Login</title>
+    <title>Shifa Hub | Humanitarian Medicine Sharing</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* تأثير القلب Card Flip */
-        .card-container {
-            perspective: 1000px;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --soft-pink: #f472b6;
+            --cherry-red: #be123c;
+            --dark-bg: #0f172a;
         }
-        .card-inner {
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
+
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+
+        /* Login Modal Animation Styles */
+        .auth-container.active .sign-in { transform: translateX(100%); opacity: 0; }
+        .auth-container.active .sign-up { transform: translateX(100%); opacity: 1; z-index: 5; }
+        .auth-container.active .toggle-container { transform: translateX(-100%); border-radius: 0 150px 100px 0; }
+        .auth-container.active .toggle { transform: translateX(50%); }
+
+        .auth-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 30px;
             position: relative;
+            width: 768px;
+            max-width: 95%;
+            min-height: 480px;
+            overflow: hidden;
         }
-        .is-flipped {
-            transform: rotateY(180deg);
-        }
-        .card-face {
-            backface-visibility: hidden;
+
+        .form-container { position: absolute; top: 0; height: 100%; transition: all 0.6s ease; width: 50%; }
+        .sign-up { opacity: 0; z-index: 1; }
+        
+        .toggle-container {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 50%; width: 50%; height: 100%;
+            overflow: hidden; transition: all 0.6s ease;
+            z-index: 1000; border-radius: 150px 0 0 100px;
         }
-        .card-back {
-            transform: rotateY(180deg);
+
+        .toggle {
+            background: linear-gradient(to right, var(--cherry-red), var(--soft-pink));
+            color: white; height: 100%; width: 200%;
+            transform: translateX(0); transition: all 0.6s ease;
+            position: relative; left: -100%;
         }
+
+        .toggle-panel {
+            position: absolute; width: 50%; height: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 0 30px; text-align: center;
+        }
+
+        .toggle-left { transform: translateX(-200%); }
+        .auth-container.active .toggle-left { transform: translateX(0); }
+
+        /* Dark Mode Support */
+        .dark-theme { background-color: var(--dark-bg); color: white; }
+        .dark-theme .bg-white { background-color: #1e293b !important; color: white; }
     </style>
 </head>
-<body class="bg-[#1a1a1a] flex items-center justify-center min-h-screen font-sans">
+<body class="bg-slate-50 transition-colors duration-300">
 
-    <div class="card-container w-[800px] h-[500px]">
-        <div id="authCard" class="card-inner w-full h-full shadow-2xl rounded-3xl overflow-hidden">
-            
-            <div class="card-face card-front bg-white flex">
-                <div class="w-3/5 p-12 flex flex-col justify-center">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Sign In</h2>
-                    <div class="space-y-4">
-                        <input type="email" placeholder="Email Address" class="w-full p-4 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ff8fa3]">
-                        <input type="password" placeholder="Password" class="w-full p-4 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ff8fa3]">
+    <nav class="flex justify-between items-center p-6 bg-white shadow-sm sticky top-0 z-50">
+        <h1 class="text-2xl font-bold text-pink-500">Shifa Hub</h1>
+        <div class="space-x-6 hidden md:flex">
+            <a href="#home" class="hover:text-pink-500">Home</a>
+            <a href="#how-it-works" class="hover:text-pink-500">How it Works</a>
+            <a href="#why-us" class="hover:text-pink-500">Why Choose Us</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100"><i class="fas fa-moon"></i></button>
+            <button id="open-login" class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600">Login</button>
+        </div>
+    </nav>
+
+    <section id="home" class="py-20 px-10 flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2">
+            <h2 class="text-5xl font-bold mb-6">Healing Hearts Through Sharing</h2>
+            <p class="text-gray-600 mb-8">Join our community to donate unused medicines and help those in need.</p>
+            <div class="flex space-x-10">
+                <div><span class="counter text-4xl font-bold text-pink-500" data-target="100">0</span>+ <p>Donors</p></div>
+                <div><span class="counter text-4xl font-bold text-pink-500" data-target="50">0</span>+ <p>Beneficiaries</p></div>
+            </div>
+        </div>
+        <div class="md:w-1/2 mt-10 md:mt-0">
+            <img src="https://via.placeholder.com/500x400" alt="Medicine Donation" class="rounded-3xl shadow-2xl">
+        </div>
+    </section>
+
+    <div id="auth-modal" class="auth-overlay">
+        <div class="auth-container" id="auth-container">
+            <div class="form-container sign-up px-10 flex flex-col justify-center bg-white">
+                <form id="signup-form" class="flex flex-col space-y-4">
+                    <h2 class="text-3xl font-bold">Create Account</h2>
+                    <input type="text" placeholder="Name" class="p-3 bg-pink-50 rounded-lg outline-none">
+                    <input type="email" placeholder="Email" class="p-3 bg-pink-50 rounded-lg outline-none">
+                    <input type="password" placeholder="Password" class="p-3 bg-pink-50 rounded-lg outline-none">
+                    <button class="bg-pink-500 text-white p-3 rounded-lg font-bold">SIGN UP</button>
+                </form>
+            </div>
+            <div class="form-container sign-in px-10 flex flex-col justify-center bg-white">
+                <form id="login-form" class="flex flex-col space-y-4">
+                    <h2 class="text-3xl font-bold">Sign In</h2>
+                    <input type="email" placeholder="Email" class="p-3 bg-pink-50 rounded-lg outline-none">
+                    <input type="password" placeholder="Password" class="p-3 bg-pink-50 rounded-lg outline-none">
+                    <a href="#" class="text-sm text-gray-400">Forgot password?</a>
+                    <button class="bg-pink-500 text-white p-3 rounded-lg font-bold">SIGN IN</button>
+                </form>
+            </div>
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <h2 class="text-2xl font-bold">Welcome Back!</h2>
+                        <p class="my-4">Already have an account? Login here.</p>
+                        <button id="to-login" class="border-2 border-white px-8 py-2 rounded-full uppercase text-xs font-bold">Sign In</button>
                     </div>
-                    <p class="text-xs text-gray-400 mt-4 text-center cursor-pointer hover:text-[#ff8fa3]">Forgot your password?</p>
-                    <button class="mt-8 w-full py-4 bg-[#ff8fa3] text-white rounded-xl font-bold text-lg hover:bg-[#ff758f] transition">SIGN IN</button>
-                </div>
-                <div class="w-2/5 bg-[#ff8fa3] flex flex-col items-center justify-center text-white p-8 text-center">
-                    <h2 class="text-2xl font-bold mb-4">Hello, Friend!</h2>
-                    <p class="mb-8 text-sm">Enter your personal details and start journey with us</p>
-                    <button onclick="toggleFlip()" class="px-10 py-2 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-[#ff8fa3] transition">Sign Up</button>
+                    <div class="toggle-panel toggle-right" style="right: 0;">
+                        <h2 class="text-2xl font-bold">Hello, Friend!</h2>
+                        <p class="my-4">Don't have an account? Join us today.</p>
+                        <button id="to-signup" class="border-2 border-white px-8 py-2 rounded-full uppercase text-xs font-bold">Sign Up</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="card-face card-back bg-white flex">
-                <div class="w-2/5 bg-[#ff8fa3] flex flex-col items-center justify-center text-white p-8 text-center">
-                    <h2 class="text-2xl font-bold mb-4">Welcome Back!</h2>
-                    <p class="mb-8 text-sm">To keep connected with us please login with your personal info</p>
-                    <button onclick="toggleFlip()" class="px-10 py-2 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-[#ff8fa3] transition">Sign In</button>
-                </div>
-                <div class="w-3/5 p-12 flex flex-col justify-center">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Create Account</h2>
-                    <div class="space-y-4">
-                        <input type="text" placeholder="Name" class="w-full p-4 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ff8fa3]">
-                        <input type="email" placeholder="Email" class="w-full p-4 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ff8fa3]">
-                        <input type="password" placeholder="Password" class="w-full p-4 bg-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ff8fa3]">
-                    </div>
-                    <button class="mt-8 w-full py-4 bg-[#ff8fa3] text-white rounded-xl font-bold text-lg hover:bg-[#ff758f] transition">SIGN UP</button>
-                </div>
-            </div>
-
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-black z-[2000]"><i class="fas fa-times"></i></button>
         </div>
     </div>
 
+    <script src="index.js"></script>
 </body>
 </html>
