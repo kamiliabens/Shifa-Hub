@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
+        // هذا الكود يمنع "الفلاش" الأبيض عند التحميل
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.classList.add('light-theme');
         }
@@ -63,7 +64,6 @@
     .nav-links a:hover { color: var(--pink-main); opacity: 1; }
     .nav-actions { display: flex; gap: 15px; align-items: center; }
     
-    /* Buttons Styles */
     .btn-home { 
         background: rgba(163, 201, 226, 0.1); color: var(--blue-accent); 
         border: 2px solid var(--blue-accent); padding: 9px 22px; 
@@ -134,7 +134,7 @@
     .footer-socials a { color: var(--text-color); font-size: 22px; transition: 0.3s; text-decoration: none; }
     .footer-socials a:hover { color: var(--pink-main); transform: scale(1.2); }
 
-    /* --- AUTH MODAL STYLES (ORIGINAL OVERLAY DESIGN) --- */
+    /* Auth Modal Styles */
     .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(10px); }
     .close-modal { position: absolute; top: 30px; right: 40px; color: #ffffff; font-size: 45px; cursor: pointer; z-index: 2100; transition: 0.3s; }
     .close-modal:hover { color: var(--pink-main); transform: rotate(90deg); }
@@ -152,14 +152,12 @@
 
     .auth-container form { background-color: #ffffff; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0 50px; height: 100%; text-align: center; }
     .auth-container h1 { font-weight: 800; margin-bottom: 15px; color: #1a1a2e; font-size: 2rem; }
-    .auth-container span { font-size: 12px; margin-bottom: 15px; color: #555; }
     
-    .input-field { background: #fce4ec; border-radius: 20px; display: flex; align-items: center; padding: 15px 25px; margin: 10px 0; width: 100%; border: 1px solid #f8bbd0; }
+    .input-field { background: #fce4ec; border-radius: 20px; display: flex; align-items: center; padding: 12px 20px; margin: 8px 0; width: 100%; border: 1px solid #f8bbd0; }
     .input-field i { color: var(--pink-main); width: 25px; font-size: 18px; margin-right: 10px; }
     .input-field input { border: none; outline: none; background: none; width: 100%; font-size: 15px; color: #1a1a2e; font-weight: 500; }
-    .input-field input::placeholder { color: #999; }
 
-    .btn-auth-primary { border-radius: 20px; border: none; background-color: var(--pink-main); color: #1a1a2e; font-size: 15px; font-weight: 800; padding: 18px 60px; cursor: pointer; margin-top: 25px; width: 100%; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-auth-primary { border-radius: 20px; border: none; background-color: var(--pink-main); color: #1a1a2e; font-size: 15px; font-weight: 800; padding: 18px 60px; cursor: pointer; margin-top: 20px; width: 100%; transition: 0.3s; text-transform: uppercase; }
     .btn-auth-primary:hover { transform: scale(1.02); background: var(--pink-hover); }
 
     .overlay-container { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; overflow: hidden; transition: transform 0.6s ease-in-out; z-index: 100; }
@@ -174,10 +172,7 @@
     .overlay-right { right: 0; transform: translateX(0); }
     .auth-container.active .overlay-right { transform: translateX(20%); }
     
-    .overlay h1 { color: #1a1a2e; }
-    .overlay p { font-size: 15px; font-weight: 500; line-height: 25px; margin: 25px 0 35px; color: #1a1a2e; }
-    
-    button.ghost { background-color: transparent; border: 2px solid #1a1a2e; color: #1a1a2e; border-radius: 20px; font-weight: 800; padding: 14px 50px; font-size: 14px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+    button.ghost { background-color: transparent; border: 2px solid #1a1a2e; color: #1a1a2e; border-radius: 20px; font-weight: 800; padding: 12px 40px; font-size: 14px; cursor: pointer; transition: 0.3s; }
     button.ghost:hover { background: #1a1a2e; color: #fff; }
     </style>
 </head>
@@ -229,8 +224,7 @@
         <h2>About Shifa Hub</h2>
         <div class="about-description">
             <p>Shifa Hub is a community-driven platform dedicated to making healthcare more accessible by connecting people who have excess medicines and medical equipment with those who need them.</p>
-      <p>Our mission is to reduce medical waste while ensuring that everyone has access to essential healthcare supplies.</p>
-  <p>We believe that healthcare is a fundamental right, and no one should struggle to afford medicines or medical equipment. Through our platform, we facilitate the free exchange of medical supplies within communities, creating a network of trust and support.</p>
+            <p>Our mission is to reduce medical waste while ensuring that everyone has access to essential healthcare supplies.</p>
         </div>
         <div class="about-cards">
             <div class="about-card"><i class="fas fa-heart"></i><h3>Our Mission</h3><p>Reducing waste and promoting community sharing.</p></div>
@@ -269,9 +263,8 @@
     <div class="login-overlay" id="loginOverlay">
         <span class="close-modal" id="closeLogin">&times;</span>
         <div class="auth-container" id="container">
-            
             <div class="form-container sign-up-container">
-                <form action="#">
+                <form id="signUpForm">
                     <h1>Create Account</h1>
                     <div class="input-field"><i class="fas fa-user"></i><input type="text" placeholder="Full Name" required /></div>
                     <div class="input-field"><i class="fas fa-envelope"></i><input type="email" placeholder="Email Address" required /></div>
@@ -281,7 +274,7 @@
             </div>
 
             <div class="form-container sign-in-container">
-                <form action="#">
+                <form id="signInForm">
                     <h1>Sign In</h1>
                     <div class="input-field"><i class="fas fa-envelope"></i><input type="email" placeholder="Email Address" required /></div>
                     <div class="input-field"><i class="fas fa-lock"></i><input type="password" placeholder="Password" required /></div>
@@ -295,12 +288,12 @@
                     <div class="overlay-panel overlay-left">
                         <h1>Welcome Back!</h1>
                         <p>To keep connected with us please login with your personal info</p>
-                        <button class="ghost" id="signIn">Sign In</button>
+                        <button class="ghost" id="signInBtn">Sign In</button>
                     </div>
                     <div class="overlay-panel overlay-right">
                         <h1>Hello, Friend!</h1>
                         <p>Enter your personal details and start journey with us</p>
-                        <button class="ghost" id="signUp">Sign In</button>
+                        <button class="ghost" id="signUpBtn">Sign Up</button>
                     </div>
                 </div>
             </div>
