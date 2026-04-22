@@ -1,72 +1,87 @@
 /**
- * Shifa Hub Main JavaScript Logic
- * Contains: Auth Toggle, Dark Mode, Counters, and Smooth Scrolling.
+ * Shifa Hub - Main Application Script
+ * Features: Auth Modal Switcher, Dark Mode Toggle, Stats Counters.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- 1. Auth Modal Toggle Logic ---
-    const authModal = document.getElementById('auth-modal');
+
+    // --- 1. Auth Modal Switch Logic ---
+    const modal = document.getElementById('modal-overlay');
     const authContainer = document.getElementById('auth-container');
-    const openLoginBtn = document.getElementById('open-login');
-    const closeLoginBtn = document.getElementById('close-modal');
-    const toSignupBtn = document.getElementById('to-signup');
-    const toLoginBtn = document.getElementById('to-login');
+    const triggerBtn = document.getElementById('login-trigger');
+    const closeBtn = document.getElementById('close-modal');
+    
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
 
-    // Open Modal
-    openLoginBtn.addEventListener('click', () => {
-        authModal.style.display = 'flex';
+    // Show the whole modal
+    triggerBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
     });
 
-    // Close Modal
-    closeLoginBtn.addEventListener('click', () => {
-        authModal.style.display = 'none';
+    // Close modal when clicking X
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        authContainer.classList.remove('active'); // Reset to login view on close
     });
 
-    // Toggle Flip Effect (Sign In <-> Sign Up)
-    toSignupBtn.addEventListener('click', () => {
+    // Toggle between Sign In and Sign Up (The Flip Effect)
+    showSignup.addEventListener('click', () => {
         authContainer.classList.add('active');
     });
 
-    toLoginBtn.addEventListener('click', () => {
+    showLogin.addEventListener('click', () => {
         authContainer.classList.remove('active');
     });
 
-    // Close when clicking outside the container
+    // Close when clicking outside the box
     window.addEventListener('click', (e) => {
-        if (e.target === authModal) {
-            authModal.style.display = 'none';
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            authContainer.classList.remove('active');
         }
     });
 
-    // --- 2. Dark Mode Toggle ---
-    const themeToggle = document.getElementById('theme-toggle');
+
+    // --- 2. Dark Mode Functionality ---
+    const darkModeBtn = document.getElementById('dark-mode-btn');
     const body = document.body;
 
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-theme');
-        const icon = themeToggle.querySelector('i');
-        if (body.classList.contains('dark-theme')) {
+    darkModeBtn.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const icon = darkModeBtn.querySelector('i');
+        
+        // Switch icons between Moon and Sun
+        if (body.classList.contains('dark-mode')) {
             icon.classList.replace('fa-moon', 'fa-sun');
+            localStorage.setItem('theme', 'dark');
         } else {
             icon.classList.replace('fa-sun', 'fa-moon');
+            localStorage.setItem('theme', 'light');
         }
     });
 
-    // --- 3. Statistical Counters ---
-    const counters = document.querySelectorAll('.counter');
-    const speed = 200;
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        darkModeBtn.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+    }
 
-    const startCounters = () => {
+
+    // --- 3. Statistical Counter Animation ---
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; // Lower is slower
+
+    const runCounters = () => {
         counters.forEach(counter => {
             const updateCount = () => {
                 const target = +counter.getAttribute('data-target');
                 const count = +counter.innerText;
-                const inc = target / speed;
+                const increment = target / speed;
 
                 if (count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(updateCount, 1);
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 15);
                 } else {
                     counter.innerText = target;
                 }
@@ -75,20 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Trigger counter when section is visible
+    // Trigger counters when the section is visible
     const observer = new IntersectionObserver((entries) => {
-        if(entries[0].isIntersecting) startCounters();
+        if(entries[0].isIntersecting) {
+            runCounters();
+        }
     }, { threshold: 0.5 });
-    
-    observer.observe(document.querySelector('#home'));
 
-    // --- 4. Smooth Scrolling for Nav Links ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
+    observer.observe(document.querySelector('#home'));
 });
