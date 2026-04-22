@@ -1,81 +1,94 @@
+/**
+ * Shifa Hub Main JavaScript Logic
+ * Contains: Auth Toggle, Dark Mode, Counters, and Smooth Scrolling.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. Dark Mode Logic ---
-    const themeToggle = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement;
-    const themeIcon = themeToggle.querySelector('i');
+    
+    // --- 1. Auth Modal Toggle Logic ---
+    const authModal = document.getElementById('auth-modal');
+    const authContainer = document.getElementById('auth-container');
+    const openLoginBtn = document.getElementById('open-login');
+    const closeLoginBtn = document.getElementById('close-modal');
+    const toSignupBtn = document.getElementById('to-signup');
+    const toLoginBtn = document.getElementById('to-login');
 
-    // وظيفة لتحديث الأيقونة
-    const updateIcon = (isLight) => {
-        if (isLight) {
-            themeIcon.classList.replace('fa-sun', 'fa-moon');
-        } else {
-            themeIcon.classList.replace('fa-moon', 'fa-sun');
+    // Open Modal
+    openLoginBtn.addEventListener('click', () => {
+        authModal.style.display = 'flex';
+    });
+
+    // Close Modal
+    closeLoginBtn.addEventListener('click', () => {
+        authModal.style.display = 'none';
+    });
+
+    // Toggle Flip Effect (Sign In <-> Sign Up)
+    toSignupBtn.addEventListener('click', () => {
+        authContainer.classList.add('active');
+    });
+
+    toLoginBtn.addEventListener('click', () => {
+        authContainer.classList.remove('active');
+    });
+
+    // Close when clicking outside the container
+    window.addEventListener('click', (e) => {
+        if (e.target === authModal) {
+            authModal.style.display = 'none';
         }
-    };
+    });
 
-    // التحقق من الوضع المحفوظ عند التحميل
-    if (localStorage.getItem('theme') === 'light') {
-        updateIcon(true);
-    }
+    // --- 2. Dark Mode Toggle ---
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
 
     themeToggle.addEventListener('click', () => {
-        htmlElement.classList.toggle('light-theme');
-        const isLight = htmlElement.classList.contains('light-theme');
-        
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        updateIcon(isLight);
-    });
-
-    // --- 2. Auth Modal Logic ---
-    const openLogin = document.getElementById('openLogin');
-    const closeLogin = document.getElementById('closeLogin');
-    const loginOverlay = document.getElementById('loginOverlay');
-    const container = document.getElementById('container');
-    const signUpBtn = document.getElementById('signUpBtn');
-    const signInBtn = document.getElementById('signInBtn');
-
-    // فتح وإغلاق الـ Modal
-    openLogin.addEventListener('click', () => {
-        loginOverlay.style.display = 'flex';
-    });
-
-    closeLogin.addEventListener('click', () => {
-        loginOverlay.style.display = 'none';
-    });
-
-    // التبديل بين Sign In و Sign Up
-    signUpBtn.addEventListener('click', () => {
-        container.classList.add("active");
-    });
-
-    signInBtn.addEventListener('click', () => {
-        container.classList.remove("active");
-    });
-
-    // إغلاق المودال عند الضغط خارجه
-    window.addEventListener('click', (e) => {
-        if (e.target === loginOverlay) {
-            loginOverlay.style.display = 'none';
+        body.classList.toggle('dark-theme');
+        const icon = themeToggle.querySelector('i');
+        if (body.classList.contains('dark-theme')) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
         }
     });
 
-    // --- 3. Fake Login Logic (for GitHub Preview) ---
-    const signInForm = document.getElementById('signInForm');
-    const signUpForm = document.getElementById('signUpForm');
+    // --- 3. Statistical Counters ---
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
 
-    const handleAuth = (e) => {
-        e.preventDefault();
-        // هنا نوهم الأستاذة بلي راهو يتحقق
-        const btn = e.target.querySelector('button');
-        const originalText = btn.innerText;
-        btn.innerText = "Processing...";
-        
-        setTimeout(() => {
-            // يبعتك لصفحة البروفايل مباشرة
-            window.location.href = "profil.html";
-        }, 1200);
+    const startCounters = () => {
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
     };
 
-    if(signInForm) signInForm.addEventListener('submit', handleAuth);
-    if(signUpForm) signUpForm.addEventListener('submit', handleAuth);
+    // Trigger counter when section is visible
+    const observer = new IntersectionObserver((entries) => {
+        if(entries[0].isIntersecting) startCounters();
+    }, { threshold: 0.5 });
+    
+    observer.observe(document.querySelector('#home'));
+
+    // --- 4. Smooth Scrolling for Nav Links ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
 });
