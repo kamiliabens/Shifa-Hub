@@ -76,7 +76,7 @@ function renderSections() {
                 '<span class="text-gray-600">' + item.wilaya + '</span>' +
                 '</div>' +
                 '<div class="flex justify-between border-b border-pink-50 pb-1 font-bold">' +
-                '<span class="text-pink-300 uppercase text-[10px]">Exp/Cond</span>' +
+                '<span class="text-pink-300 uppercase text-[10px]">Date Added</span>' +
                 '<span class="status-badge"><i class="fas fa-check-circle"></i> ' + item.expiry + '</span>' +
                 '</div>' +
                 '<div class="flex justify-between font-bold">' +
