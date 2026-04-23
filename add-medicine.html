@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item | Shifa Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #fcf9f5; 
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --pink-main: #ff8fa3;
+            --input-bg: #fdfafb;
+            --shine-color: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --shine-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+        }
+
+        .premium-form-card {
+            background: var(--card-bg);
+            border: 2px solid var(--pink-main);
+            border-radius: 40px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--pink-main);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 143, 163, 0.2);
+            outline: none;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Photo upload area - same as original */
+        .photo-upload-area {
+            width: 100%;
+            min-height: 140px;
+            border: 2px dashed var(--pink-main);
+            border-radius: 20px;
+            background: var(--input-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            gap: 10px;
+        }
+
+        .photo-upload-area:hover {
+            background: rgba(255, 143, 163, 0.08);
+        }
+
+        .photo-upload-area i {
+            font-size: 2rem;
+            color: var(--pink-main);
+        }
+
+        .photo-upload-area span {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--pink-main);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #itemImage {
+            display: none;
+        }
+
+        #preview-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 16px;
+            display: none;
+        }
+    </style>
+</head>
+<body class="py-10 px-4 min-h-screen flex items-center justify-center">
+
+    <main class="w-full max-w-2xl">
+        <a href="index.html" class="inline-block mb-6 text-[#ff8fa3] font-bold hover:scale-105 transition">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+        
+        <article class="premium-form-card shadow-2xl">
+            <header class="mb-8 text-center">
+                <h1 class="text-3xl font-extrabold">Add New <span class="text-[#ff8fa3]">Listing</span></h1>
+                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Make a difference in someone's life</p>
+            </header>
+            
+            <form id="addMedicineForm" class="space-y-6" enctype="multipart/form-data">
+
+                <!-- Item Name -->
+                <div class="input-group">
+                    <label for="itemName">Item Name</label>
+                    <input type="text" id="itemName" name="item_name" placeholder="e.g. Doliprane, Wheelchair, Panadol" required>
+                </div>
+                
+                <!-- Category + Quantity -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="input-group">
+                        <label for="itemCategory">Category</label>
+                        <select id="itemCategory" name="category" required>
+                            <option value="medicine">Medicine</option>
+                            <option value="equipment">Medical Equipment</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="itemExpiry">Condition / Expiry</label>
+                        <input type="text" id="itemExpiry" name="expiry_date" placeholder="e.g. 12/2026 or Good Condition" required>
+                    </div>
+                </div>
+
+                <!-- Wilaya -->
+                <div class="input-group">
+                    <label for="itemWilaya">Wilaya (Province)</label>
+                    <input type="text" id="itemWilaya" name="wilaya" placeholder="e.g. Alger, Oran, Constantine..." required>
+                </div>
+
+                <!-- Item Photo - same style as original design -->
+                <div class="input-group">
+                    <label>Item Photo (Required)</label>
+                    <div class="photo-upload-area" id="uploadArea" onclick="document.getElementById('itemImage').click()">
+                        <img id="preview-img" src="" alt="Preview">
+                        <i class="fas fa-camera" id="upload-icon"></i>
+                        <span id="upload-text">Click to Upload Photo</span>
+                    </div>
+                    <input type="file" id="itemImage" name="item_image" accept="image/*" required>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="w-full bg-[#ff8fa3] text-white py-4 rounded-2xl font-black uppercase tracking-widest mt-4 hover:bg-[#ff4d73] transition shadow-lg hover:shadow-xl">
+                    Post Listing
+                </button>
+            </form>
+        </article>
+    </main>
+
+    <script>
+        // Show image preview when user selects a file
+        document.getElementById('itemImage').onchange = function() {
+            var file = this.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById('preview-img');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById('upload-icon').style.display = 'none';
+                document.getElementById('upload-text').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Submit form
+        document.getElementById('addMedicineForm').onsubmit = function(e) {
+            e.preventDefault();
+
+            var userStr = localStorage.getItem('user');
+            if (!userStr) {
+                alert('Please login first.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            var user = JSON.parse(userStr);
+            var fileInput = document.getElementById('itemImage');
+
+            if (!fileInput.files.length) {
+                alert('Please upload a photo of the item.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('user_id', user.id);
+            formData.append('item_name', document.getElementById('itemName').value);
+            formData.append('category', document.getElementById('itemCategory').value);
+            formData.append('expiry_date', document.getElementById('itemExpiry').value);
+            formData.append('wilaya', document.getElementById('itemWilaya').value);
+            formData.append('item_image', fileInput.files[0]);
+
+            var btn = document.getElementById('submitBtn');
+            btn.textContent = 'Submitting...';
+            btn.disabled = true;
+
+            fetch('api_medicines.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.status === 'success') {
+                    alert('Item submitted successfully! It will be reviewed shortly.');
+                    window.location.href = 'profil.html';
+                } else {
+                    alert('Error: ' + (data.message || 'Unknown error'));
+                    btn.textContent = 'Post Listing';
+                    btn.disabled = false;
+                }
+            })
+            .catch(function() {
+                alert('Connection error. Please try again.');
+                btn.textContent = 'Post Listing';
+                btn.disabled = false;
+            });
+        };
+    </script>
+</body>
+</html>

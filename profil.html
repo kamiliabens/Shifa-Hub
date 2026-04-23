@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | Shifa Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #fcf9f5; 
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --pink-main: #ff8fa3;
+            --stat-border: #ffe4e9;
+            --modal-bg: #ffffff;
+            --input-bg: #fdfafb;
+            --shine-color: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --stat-border: rgba(255, 255, 255, 0.1);
+            --modal-bg: #1e293b;
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --shine-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .premium-card {
+            background: var(--card-bg);
+            border: 2px solid var(--stat-border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, var(--shine-color), transparent);
+            transform: skewX(-25deg);
+            transition: 0.8s;
+        }
+
+        .premium-card:hover::before { left: 150%; }
+        .premium-card:hover { border-color: var(--pink-main); transform: translateY(-3px); }
+
+        /* Avatar with first letter */
+        .avatar-letter {
+            width: 140px;
+            height: 140px;
+            border-radius: 35px;
+            background: linear-gradient(135deg, #ff8fa3, #ff4d73);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            border: 4px solid rgba(255,143,163,0.4);
+            box-shadow: 0 10px 30px rgba(255,143,163,0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .avatar-letter:hover { transform: scale(1.1); }
+
+        .hover-pink:hover { color: var(--pink-main) !important; cursor: pointer; }
+
+        #editModal {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0, 0, 0, 0.75);
+            align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            width: 90%; max-width: 440px; background: var(--modal-bg); 
+            border-radius: 30px; padding: 30px; border: 2px solid var(--pink-main);
+        }
+
+        .input-label { display: block; font-size: 11px; font-weight: 800; color: var(--pink-main); margin: 10px 0 5px 5px; }
+
+        .activity-box {
+            background: rgba(255, 143, 163, 0.05);
+            border-radius: 15px;
+            padding: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .activity-box:hover { background: rgba(255, 143, 163, 0.12); border-color: var(--pink-main); }
+
+        .medicine-icon-badge {
+            width: 45px; height: 45px; background: var(--pink-main);
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; color: #1a1a2e; font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn {
+            padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            cursor: pointer; border: 2px solid var(--stat-border); background: transparent;
+            color: var(--text-main); transition: all 0.3s;
+        }
+        .tab-btn.active { background: var(--pink-main); color: white; border-color: var(--pink-main); }
+    </style>
+</head>
+<body class="py-10 px-4">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+
+        <!-- Profile Header -->
+        <header class="premium-card rounded-[40px] p-8 flex flex-col md:flex-row items-center gap-10">
+            <div class="avatar-letter" id="avatar-letter">?</div>
+            
+            <div class="flex-1 text-center md:text-left">
+                <h1 id="display-name" class="text-3xl font-extrabold hover-pink">Loading...</h1>
+                <p id="display-email" class="text-sm text-gray-400 mt-1"></p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-8 mt-6">
+                    <div class="text-center">
+                        <p id="donations-count" class="text-2xl font-extrabold hover-pink">0</p>
+                        <p class="text-[10px] uppercase text-gray-400 font-bold">Donations</p>
+                    </div>
+                    <div class="text-center border-l border-pink-100/20 pl-8">
+                        <p id="taken-count" class="text-2xl font-extrabold hover-pink">0</p>
+                        <p class="text-[10px] uppercase text-gray-400 font-bold">Requests</p>
+                    </div>
+                    <div class="text-center border-l border-pink-100/20 pl-8">
+                        <p class="text-2xl font-extrabold hover-pink">4.8</p>
+                        <div class="flex text-[#ff8fa3] text-[10px] justify-center">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button id="openEditModal" class="bg-[#ff8fa3] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#ff4d73] transition-all shadow-md">Edit Profile</button>
+                <button id="logoutBtn" class="bg-transparent border-2 border-red-400 text-red-400 px-10 py-3 rounded-2xl font-bold hover:bg-red-400 hover:text-white transition-all">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+                <a href="index.html" class="text-center text-xs font-bold opacity-60 hover:opacity-100 transition-opacity">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Home
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="premium-card rounded-[40px] p-10">
+            <!-- Tabs -->
+            <div class="section-tabs">
+                <button class="tab-btn active" onclick="showTab('donations')">
+                    <i class="fas fa-hand-holding-heart mr-2"></i>My Donations
+                </button>
+                <button class="tab-btn" onclick="showTab('taken')">
+                    <i class="fas fa-box-open mr-2"></i>Items Received
+                </button>
+            </div>
+
+            <!-- Donations Tab -->
+            <section id="tab-donations">
+                <div id="my-items-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <p class="text-gray-500 col-span-2">Loading your listings...</p>
+                </div>
+                <!-- Add new item button -->
+                <div class="mt-6">
+                    <a href="add-medicine.html" class="inline-flex items-center gap-2 bg-[#ff8fa3] text-white px-6 py-3 rounded-2xl font-bold hover:bg-[#ff4d73] transition shadow-md">
+                        <i class="fas fa-plus"></i> Add New Item
+                    </a>
+                </div>
+            </section>
+
+            <!-- Taken Items Tab -->
+            <section id="tab-taken" style="display:none;">
+                <div id="taken-items-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <p class="text-gray-500 col-span-2">Loading received items...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editModal" role="dialog" aria-modal="true" aria-label="Edit Profile">
+        <div class="modal-content">
+            <h2 class="text-xl font-black text-center mb-6">Edit Profile</h2>
+            <form id="edit-form">
+                <div>
+                    <label class="input-label">Full Name</label>
+                    <input type="text" id="edit-name" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border border-pink-200 outline-none text-xs text-[var(--text-main)]" placeholder="Your full name">
+                </div>
+                <div>
+                    <label class="input-label">Email</label>
+                    <input type="email" id="edit-email" class="w-full p-3 rounded-xl bg-[var(--input-bg)] border border-pink-200 outline-none text-xs text-[var(--text-main)]" placeholder="Your email">
+                </div>
+                
+                <div class="flex gap-3 mt-8">
+                    <button type="button" id="saveProfileBtn" class="flex-1 py-3 rounded-xl bg-[#ff8fa3] text-white font-bold text-sm hover:bg-[#ff4d73] transition-colors">Save Changes</button>
+                    <button type="button" id="cancelBtn" class="flex-1 py-3 rounded-xl bg-gray-100 text-gray-500 font-bold text-sm hover:bg-gray-200 transition-colors">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="profil.js"></script>
+</body>
+</html>
