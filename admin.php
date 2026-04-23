@@ -20,7 +20,7 @@ if (isset($_POST['update_status'])) {
 }
 
 
-$result = mysqli_query($conn, "SELECT * FROM medicines WHERE status='pending'");
+$result = mysqli_query($conn, "SELECT medicines.*, users.name as donor_name FROM medicines JOIN users ON medicines.user_id = users.id WHERE medicines.status='pending'");
 $users_result = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC");
 ?>
 
@@ -29,15 +29,19 @@ $users_result = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC");
 
 <table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;">
     <tr style="background-color: #f2f2f2;">
+        <th>Image</th>
         <th>Item Name</th>
         <th>Category</th>
+        <th>User</th>
         <th>Details</th>
         <th>Action</th>
     </tr>
     <?php while ($row = mysqli_fetch_assoc($result)): ?>
     <tr>
+        <td><img src="img/<?php echo $row['image_path']; ?>" width="80" style="border-radius: 8px;" onerror="this.src='img/default_med.jpg'"></td>
         <td><?php echo $row['item_name']; ?></td>
         <td><?php echo $row['category']; ?></td>
+        <td><?php echo htmlspecialchars($row['donor_name']); ?></td>
         <td><?php echo $row['expiry_date']; ?></td>
         <td>
             <form method="POST" style="display: flex; gap: 10px;">
