@@ -5,11 +5,7 @@ if (isset($_POST['update_status'])) {
     $id = $_POST['item_id'];
     $new_status = $_POST['status'];
     
-    
-    $reason = mysqli_real_escape_string($conn, $_POST['reject_reason']);
-
-   
-    $query = "UPDATE medicines SET status='$new_status', rejection_reason='$reason' WHERE id=$id";
+    $query = "UPDATE medicines SET status='$new_status' WHERE id=$id";
     
     if (mysqli_query($conn, $query)) {
         header("Location: admin.php?success=1");
@@ -51,8 +47,6 @@ $users_result = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC");
                     <option value="approved">Approve</option>
                     <option value="rejected">Reject</option>
                 </select>
-
-                <input type="text" name="reject_reason" placeholder="Reason (Optional for approval)">
                 
                 <button type="submit" name="update_status">Confirm</button>
             </form>
