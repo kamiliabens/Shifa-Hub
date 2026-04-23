@@ -79,9 +79,6 @@ function renderSections() {
                 '<span class="text-pink-300 uppercase text-[10px]">Date Added</span>' +
                 '<span class="status-badge"><i class="fas fa-check-circle"></i> ' + item.expiry + '</span>' +
                 '</div>' +
-                '<div class="flex justify-between font-bold">' +
-                '<span class="text-pink-300 uppercase text-[10px]">Date</span>' +
-                '<span class="text-gray-600 text-[10px]">' + (item.date ? item.date.split(' ')[0] : '') + '</span>' +
                 '</div>' +
                 '</div>' +
                 '<button onclick="requestItem(this, ' + item.id + ')" class="bg-[#fdf2f4] text-[#ff8fa3] w-full py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-[#ff8fa3] hover:text-white transition-all active:scale-95">Request Now</button>' +
