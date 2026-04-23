@@ -117,6 +117,10 @@ function loadMyDonations() {
                     statusColor = 'text-yellow-500';
                     statusText = 'Pending review';
                 }
+                if (item.status === 'rejected' && (item.rejection_reason || item.reason)) {
+                    var reasonText = item.rejection_reason || item.reason;
+                    statusText += ' <br><span class="text-red-400 font-normal">Reason: ' + reasonText + '</span>';
+                }
 
                 var imgSrc = item.image_path ? 'img/' + item.image_path : 'img/default_med.jpg';
 
