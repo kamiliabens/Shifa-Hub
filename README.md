@@ -45,7 +45,7 @@
 To demonstrate the Update (UPDATE) and Delete logic for the administrator: 
 - ​Navigate to: "http://localhost/shifa_hub/admin.php." As an admin, you can view all Pending donations.
 - ​Click Approve to make the medicine visible in the public search, or Reject to remove it.
-#Thank you for reviewing our work. We look forward to your feedback! ❤️✨
+# Thank you for reviewing our work. We look forward to your feedback! ❤️✨
 
 
    
