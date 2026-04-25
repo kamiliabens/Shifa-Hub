@@ -24,7 +24,7 @@
 - **Delete:** Users can securely ***remove*** their own listings from their profile page.
 - **Claiming System:** Users can "Take" items, which updates the database status automatically.
 
-## 📋 Setup and Execution Instructions
+## Setup and Execution Instructions
 
 ### 1. Prerequisites
 - ​Download and install **XAMPP** (**Apache** and **MySQL** services must be running).  
