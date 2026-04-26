@@ -1,4 +1,4 @@
-// Wait for page to load
+
 document.addEventListener('DOMContentLoaded', function() {
 
     var themeBtn    = document.getElementById('theme-toggle');
@@ -52,14 +52,15 @@ document.addEventListener('DOMContentLoaded', function() {
         signUpForm.onsubmit = function(e) {
             e.preventDefault();
 
-            var name     = signUpForm.querySelector('input[type="text"]').value;
+            var name     = signUpForm.querySelector('input[placeholder="Full Name"]').value;
             var email    = signUpForm.querySelector('input[type="email"]').value;
+            var phone    = signUpForm.querySelector('input[type="tel"]').value;
             var password = signUpForm.querySelector('input[type="password"]').value;
 
             fetch('api_auth.php?action=register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: name, email: email, password: password })
+                body: JSON.stringify({ name: name, email: email, phone: phone, password: password })
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
