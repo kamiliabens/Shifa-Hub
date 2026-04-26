@@ -5,6 +5,7 @@ if (isset($_POST['update_status'])) {
     $id = $_POST['item_id'];
     $new_status = $_POST['status'];
     
+    
     $query = "UPDATE medicines SET status='$new_status' WHERE id=$id";
     
     if (mysqli_query($conn, $query)) {
@@ -61,12 +62,14 @@ $users_result = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC");
         <th>ID</th>
         <th>Name</th>
         <th>Email</th>
+        <th>Phone</th>
     </tr>
     <?php while ($user_row = mysqli_fetch_assoc($users_result)): ?>
     <tr>
         <td><?php echo $user_row['id']; ?></td>
         <td><?php echo htmlspecialchars($user_row['name']); ?></td>
         <td><?php echo htmlspecialchars($user_row['email']); ?></td>
+        <td><?php echo htmlspecialchars($user_row['phone'] ?? '-'); ?></td>
     </tr>
     <?php endwhile; ?>
 </table>
