@@ -1,7 +1,7 @@
-// Category configs - only medicine and equipment
+
 var categoryConfigs = {
-    'medicine':   { id: 'medicine',   title: 'Medicine',         icon: 'fa-pills',       items: [] },
-    'equipment':  { id: 'equipment',  title: 'Medical Equipment', icon: 'fa-stethoscope', items: [] }
+    'medicine': { id: 'medicine', title: 'Medicine', icon: 'fa-pills', items: [] },
+    'equipment': { id: 'equipment', title: 'Medical Equipment', icon: 'fa-stethoscope', items: [] }
 };
 
 var currentCategoryFilter = 'all';
@@ -9,13 +9,13 @@ var currentCategoryFilter = 'all';
 // Load items from server
 function loadItems() {
     fetch('api_medicines.php')
-        .then(function(res) { return res.json(); })
-        .then(function(items) {
+        .then(function (res) { return res.json(); })
+        .then(function (items) {
             // Reset items
             categoryConfigs['medicine'].items = [];
             categoryConfigs['equipment'].items = [];
 
-            items.forEach(function(item) {
+            items.forEach(function (item) {
                 var cat = item.category.toLowerCase();
 
                 // Map old categories to new ones
@@ -40,7 +40,7 @@ function loadItems() {
 
             renderSections();
         })
-        .catch(function(e) {
+        .catch(function (e) {
             console.error('Error loading items:', e);
         });
 }
@@ -52,14 +52,14 @@ function renderSections() {
 
     var keys = Object.keys(categoryConfigs);
 
-    keys.forEach(function(key, idx) {
+    keys.forEach(function (key, idx) {
         var cat = categoryConfigs[key];
         if (cat.items.length === 0) return;
 
         var sId = 'scroll-' + idx;
 
         var cardsHtml = '';
-        cat.items.forEach(function(item) {
+        cat.items.forEach(function (item) {
             cardsHtml += '<div class="med-card" data-name="' + item.name.toLowerCase() + '" data-wilaya="' + item.wilaya.toLowerCase() + '" data-category="' + key + '">' +
                 '<div class="qty-badge">Available</div>' +
                 '<div class="img-container">' +
@@ -106,7 +106,7 @@ function filterItems() {
     var resultsDiv = document.getElementById('resultsContainer');
     var count = 0;
 
-    document.querySelectorAll('.med-card').forEach(function(card) {
+    document.querySelectorAll('.med-card').forEach(function (card) {
         var nameMatch = card.dataset.name.includes(searchText);
         var categoryMatch = (currentCategoryFilter === 'all' || card.dataset.category === currentCategoryFilter);
         var show = nameMatch && categoryMatch;
@@ -125,7 +125,7 @@ function filterItems() {
     }
 
     // Hide empty sections
-    document.querySelectorAll('.category-section').forEach(function(section) {
+    document.querySelectorAll('.category-section').forEach(function (section) {
         var hasVisible = section.querySelectorAll('.med-card:not(.hidden-item)').length > 0;
         section.style.display = hasVisible ? 'block' : 'none';
     });
@@ -138,11 +138,11 @@ function filterByCategory(cat, btn) {
     currentCategoryFilter = cat;
 
     // Update tab styles
-    document.querySelectorAll('.cat-tab').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.cat-tab').forEach(function (b) { b.classList.remove('active'); });
     btn.classList.add('active');
 
     // Apply filter
-    document.querySelectorAll('.med-card').forEach(function(card) {
+    document.querySelectorAll('.med-card').forEach(function (card) {
         var searchText = document.getElementById('mainSearch').value.toLowerCase();
         var nameMatch = !searchText || card.dataset.name.includes(searchText);
         var catMatch = (cat === 'all' || card.dataset.category === cat);
@@ -150,7 +150,7 @@ function filterByCategory(cat, btn) {
     });
 
     // Hide empty sections
-    document.querySelectorAll('.category-section').forEach(function(section) {
+    document.querySelectorAll('.category-section').forEach(function (section) {
         var hasVisible = section.querySelectorAll('.med-card:not(.hidden-item)').length > 0;
         section.style.display = hasVisible ? 'block' : 'none';
     });
@@ -171,8 +171,8 @@ function requestItem(btn, itemId) {
     }
 
     fetch('take_item.php?id=' + itemId)
-        .then(function(res) { return res.json(); })
-        .then(function(result) {
+        .then(function (res) { return res.json(); })
+        .then(function (result) {
             if (result.status === 'success') {
                 alert('Request sent! You will be contacted by the donor soon.');
                 btn.innerText = 'Requested';
@@ -188,18 +188,18 @@ function requestItem(btn, itemId) {
                 alert('This item is no longer available.');
             }
         })
-        .catch(function() {
+        .catch(function () {
             alert('Connection error. Please try again.');
         });
 }
 
 // Animate counter numbers
 function animateCounters() {
-    document.querySelectorAll('.counter').forEach(function(counter) {
+    document.querySelectorAll('.counter').forEach(function (counter) {
         var target = parseInt(counter.getAttribute('data-target'));
         var count = 0;
 
-        var timer = setInterval(function() {
+        var timer = setInterval(function () {
             count += Math.ceil(target / 40);
             if (count >= target) {
                 counter.innerText = target;
@@ -236,7 +236,7 @@ function type() {
 }
 
 // Start everything on page load
-window.onload = function() {
+window.onload = function () {
     animateCounters();
     type();
     loadItems();
