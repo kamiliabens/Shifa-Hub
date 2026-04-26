@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 26 avr. 2026 à 14:22
+-- Généré le : dim. 26 avr. 2026 à 15:04
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.0.30
 
@@ -48,7 +48,7 @@ INSERT INTO `medicines` (`id`, `user_id`, `item_name`, `category`, `expiry_date`
 (42, 10, 'Panadol Extra', 'medicine', '21/2/2025', 'laghouat', '1777203332_panadol.jpg', 'approved', NULL),
 (43, 10, 'wheelchair', 'equipment', '21/2/2025', 'laghouat', '1777203394_wheelchair.webp', 'approved', NULL),
 (44, 11, 'Allerfin', 'medicine', '20/2/2026', 'tizi ouzou', '1777203493_allerfin.webp', 'approved', NULL),
-(45, 11, 'blood measurement', 'equipment', '20/2/2026', 'tizi ouzou', '1777203528_blood measurement.jpg', 'approved', NULL),
+(45, 11, 'blood measurement', 'equipment', '20/2/2026', 'tizi ouzou', '1777203528_blood measurement.jpg', 'taken', 10),
 (46, 11, 'Cetamol', 'medicine', '25/2/2026', 'tizi ouzou', '1777203561_cetamol.jpg', 'approved', NULL),
 (47, 11, 'Ventolin', 'medicine', '25/6/2026', 'tizi ouzou', '1777203663_ventolin.jpg', 'approved', NULL),
 (48, 14, 'Claritine', 'medicine', '25/2/2026', 'tyaret', '1777203899_claritine.webp', 'approved', NULL),
