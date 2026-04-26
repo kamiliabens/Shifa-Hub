@@ -54,7 +54,7 @@ INSERT INTO `medicines` (`id`, `user_id`, `item_name`, `category`, `expiry_date`
 (48, 14, 'Claritine', 'medicine', '25/2/2026', 'tyaret', '1777203899_claritine.webp', 'approved', NULL),
 (49, 14, 'Crutches ', 'equipment', '21/2/2025', 'tyaret', '1777203963_crutches (2).jpg', 'taken', 11),
 (50, 14, 'Feroglobin', 'medicine', '25/6/2026', 'tyaret', '1777204091_feroglobin.jpeg', 'approved', NULL),
-(51, 14, 'Measuring blood sugar', 'medicine', '20/2/2026', 'tyaret', '1777204135_measuring blood sugar.jpg', 'approved', NULL),
+(51, 14, 'Measuring blood sugar', 'equipment', '20/2/2026', 'tyaret', '1777204135_measuring blood sugar.jpg', 'approved', NULL),
 (52, 12, 'Excedrin', 'medicine', '01/6/2026', 'laghouat', '1777204227_excedrin.jpg', 'approved', NULL),
 (53, 12, 'Crutches ', 'equipment', '01/6/2026', 'laghouat', '1777204257_Crutches.jpg', 'approved', NULL),
 (54, 12, 'Loratadine', 'medicine', '01/6/2026', 'laghouat', '1777204313_loratadine.webp', 'approved', NULL),
