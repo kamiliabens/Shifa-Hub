@@ -18,7 +18,8 @@ $data = json_decode(file_get_contents("php://input"), true);
 if ($action == 'register') {
     $name  = mysqli_real_escape_string($conn, $data['name']);
     $email = mysqli_real_escape_string($conn, $data['email']);
-    $pass  = password_hash($data['password'], PASSWORD_DEFAULT);
+    $phone = mysqli_real_escape_string($conn, $data['phone'] ?? '');
+    $pass  = mysqli_real_escape_string($conn, $data['password']); // No hashing as requested
 
     // Check if email already exists
     $check = mysqli_query($conn, "SELECT id FROM users WHERE email = '$email'");
@@ -27,7 +28,7 @@ if ($action == 'register') {
         exit();
     }
 
-    $sql = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$pass')";
+    $sql = "INSERT INTO users (name, email, phone, password) VALUES ('$name', '$email', '$phone', '$pass')";
     if (mysqli_query($conn, $sql)) {
         echo json_encode(["status" => "success"]);
     } else {
@@ -42,7 +43,8 @@ if ($action == 'login') {
     $result = mysqli_query($conn, $sql);
     $user  = mysqli_fetch_assoc($result);
 
-    if ($user && password_verify($data['password'], $user['password'])) {
+    if ($user && $user['password'] == $data['password']) {  
+        // Plain text comparison
         $_SESSION['user_id'] = $user['id'];
         echo json_encode(["status" => "success", "user" => $user]);
     } else {
