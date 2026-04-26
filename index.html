@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        // التحقق من الثيم قبل تحميل الصفحة لمنع الوميض الأبيض
+        // chack theme
         if (localStorage.getItem('theme') === 'light') {
             document.documentElement.classList.add('light-theme');
         }
@@ -47,7 +47,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
     body { background-color: var(--bg-color); color: var(--text-color); transition: 0.4s; overflow-x: hidden; }
 
-    /* Navigation Bar */
+    /* navigation bar*/
     .navbar {
         display: flex; justify-content: space-between; align-items: center;
         padding: 15px 8%; position: fixed; width: 100%; top: 0; z-index: 1000;
@@ -241,9 +241,9 @@
         <div class="auth-container" id="container">
             <div class="form-container sign-up-container">
                 <form action="#">
-                    <h1>Create Account</h1>
                     <div class="input-field"><i class="fas fa-user"></i><input type="text" placeholder="Full Name" required /></div>
                     <div class="input-field"><i class="fas fa-envelope"></i><input type="email" placeholder="Email Address" required /></div>
+                    <div class="input-field"><i class="fas fa-phone"></i><input type="tel" placeholder="Phone Number" required /></div>
                     <div class="input-field"><i class="fas fa-lock"></i><input type="password" placeholder="Password" required /></div>
                     <button class="btn-auth-primary" type="submit">Sign Up</button>
                 </form>
